@@ -1,0 +1,47 @@
+#include "keypad.h"
+void setup() {
+  // put your setup code here, to run once:
+  volatile char *dirF = (char*)0x30, *dirK = (char*)0x107;
+  volatile char *dirA = (char*)0x21, *dirB = (char*)0x24;
+  *dirA = 0xFF; *dirB = 0xFF;
+  *dirF = 0x0F; *dirK = 0x00; 
+ 
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  volatile char *outA = (char*)0x22;//controls 7-Segment display
+  volatile char *outB = (char*)0x25;//controls digit of 7-Segment display
+  volatile long i,j;
+  char dig[4];
+  dig[0] = waitForKeypad();
+  dig[1] = waitForKeypad();
+  dig[2] = waitForKeypad();
+  dig[3] = waitForKeypad();
+
+  for(j = 0; j<500; j++){
+  *outA = dig[0]; 
+  *outB = 0x70;
+  for(i = 0; i<1000; i++);
+  *outB = 0xF0; 
+  for(i = 0; i<100; i++);
+
+  *outA = dig[1];
+  *outB = 0xB0;
+  for(i = 0; i<1000; i++);
+  *outB = 0xF0; 
+  for(i = 0; i<100; i++);
+
+  *outA = dig[2]; 
+  *outB = 0xD0;
+  for(i = 0; i<1000; i++);
+  *outB = 0xF0; 
+  for(i = 0; i<100; i++);
+
+  *outA = dig[3];
+  *outB = 0xE0;
+  for(i = 0; i<1000; i++);
+  *outB = 0xF0; 
+  for(i = 0; i<100; i++);
+  }
+}
