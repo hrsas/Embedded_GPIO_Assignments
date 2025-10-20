@@ -1,0 +1,40 @@
+void delay(void);
+void display(void);
+
+char columns[5][8] = {{0xC7, 0xBB, 0x7D, 0x7D, 0x7D, 0x7D, 0xB9, 0xC6}, //a
+                      {0xDF, 0xDF, 0xDF, 0xC3, 0xDD, 0xDD, 0xDD, 0xA3}, //b
+                      {0xF0, 0xEF, 0xEF, 0xEF, 0xEF, 0xCF, 0xAF, 0x70}, //c
+                      {0xFB, 0xFB, 0xFB, 0xC3, 0xBB, 0xBB, 0xBB, 0xC3}, //d
+                       {0xE7, 0xDB, 0xDB, 0xDB, 0xD7, 0xEF, 0xD7, 0x39} //e
+                      };
+
+char rows[8] = {0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80};
+
+void delay(void) {
+    for(volatile int i = 0; i < 5000; i++); 
+}
+
+void delay_1sec(void) {
+    for(volatile long i = 0; i < 250000; i++);
+}
+
+
+void display(){
+  volatile char *outF = (char*)0x31;
+  volatile char *outK = (char*)0x108;
+  *outF = 0x00;
+  *outK = 0xFF;
+  for(int i = 0; i<5; i++){
+    for(int k = 0; k<50; k++){
+      for(int j = 0; j<8; j++){
+        *outF = 0x00;                   
+        *outK = columns[i][j];          
+        *outF = rows[j];
+        delay();
+      }
+    }
+    *outF = 0x00;
+    *outK = 0xFF;
+    delay_1sec();
+  }
+}
